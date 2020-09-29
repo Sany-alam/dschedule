@@ -10,7 +10,7 @@ if(isset($_POST['recentReport'])){
     $res = mysqli_query($conn,$sql);
     ?>
     <div class="table-responsive">
-        <table class="table table-hover e-commerce-table">
+        <table class="table table-hover">
             <thead >
                 <tr>
                     <th>Serial</th>
