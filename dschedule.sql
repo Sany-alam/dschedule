@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.5
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Sep 29, 2020 at 05:01 PM
--- Server version: 10.3.24-MariaDB
--- PHP Version: 7.3.6
+-- Host: 127.0.0.1
+-- Generation Time: Sep 29, 2020 at 08:54 PM
+-- Server version: 10.4.13-MariaDB
+-- PHP Version: 7.4.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ownworkbd_daa`
+-- Database: `dschedule`
 --
 
 -- --------------------------------------------------------
@@ -89,7 +88,7 @@ INSERT INTO `tbl_appoint_tele` (`id`, `doctor_id`, `patient_id`, `shift_id`, `da
 (1, 41, 1, '', '12-9-2020', '1', 0, '', '01679636311', 0),
 (2, 41, 1, '', '7-9-2020', '1', 0, '', '01679636311', 0),
 (3, 41, 22, '', '7-9-2020', '2', 0, '', '01852901177', 0),
-(4, 41, 22, '', '9-9-2020', '1', 0, '', '01852901177', 0),
+(4, 41, 22, '', '29-9-2020', '1', 0, '', '01852901177', 0),
 (5, 41, 22, '', '17-9-2020', '1', 1, '', '01852901177', 0),
 (6, 41, 29, '', '17-9-2020', '2', 0, '', '01846576486', 1),
 (7, 41, 22, '', '25-9-2020', '1', 0, '', '01852901177', 0),
@@ -414,7 +413,29 @@ CREATE TABLE `tbl_prescription` (
 --
 
 INSERT INTO `tbl_prescription` (`id`, `appointment_id`, `prescription`) VALUES
-(1, 5, 'You are fired');
+(1, 5, 'You are fired'),
+(2, 4, 'zxc');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_prescription_regular`
+--
+
+CREATE TABLE `tbl_prescription_regular` (
+  `id` int(11) NOT NULL,
+  `appointment_id` int(11) NOT NULL,
+  `prescription` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_prescription_regular`
+--
+
+INSERT INTO `tbl_prescription_regular` (`id`, `appointment_id`, `prescription`) VALUES
+(1, 1, 'd'),
+(2, 1, 'asd'),
+(3, 8, 'this is a prescription about z');
 
 -- --------------------------------------------------------
 
@@ -445,6 +466,19 @@ INSERT INTO `tbl_report` (`id`, `appointment_id`, `image`, `date`) VALUES
 (12, 10, '202009241816451208756707.jpg', '2020-09-24 18:16:45'),
 (13, 10, '202009241916342077883717.jpg', '2020-09-24 19:16:36'),
 (14, 8, '20200925074157325464824.jpg', '2020-09-25 07:41:57');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_report_regular`
+--
+
+CREATE TABLE `tbl_report_regular` (
+  `id` int(11) NOT NULL,
+  `appointment_id` int(11) NOT NULL,
+  `image` text NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -699,9 +733,21 @@ ALTER TABLE `tbl_prescription`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_prescription_regular`
+--
+ALTER TABLE `tbl_prescription_regular`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_report`
 --
 ALTER TABLE `tbl_report`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_report_regular`
+--
+ALTER TABLE `tbl_report_regular`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -790,13 +836,25 @@ ALTER TABLE `tbl_plasma_donor`
 -- AUTO_INCREMENT for table `tbl_prescription`
 --
 ALTER TABLE `tbl_prescription`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tbl_prescription_regular`
+--
+ALTER TABLE `tbl_prescription_regular`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_report`
 --
 ALTER TABLE `tbl_report`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `tbl_report_regular`
+--
+ALTER TABLE `tbl_report_regular`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_schedule`

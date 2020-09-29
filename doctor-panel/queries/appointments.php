@@ -5,6 +5,82 @@ $doctor = $_SESSION['doctor']['id'];
 date_default_timezone_set('Asia/Dhaka');
 $date = date('d-m-Y');
 
+if(isset($_POST['createPrescription'])){
+    $appointment_id = $_POST['appointment_id'];
+    $prescription = $_POST['prescription'];
+    $sql = "INSERT INTO `tbl_prescription_regular`(`appointment_id`, `prescription`) VALUES ('$appointment_id','$prescription')";
+    $res = mysqli_query($conn,$sql);
+    if($res){
+        echo "ok";
+    }else{
+        echo var_dump($res);
+    }
+}
+
+if(isset($_POST['editPrescription'])){
+    $prescription_id = $_POST['prescription_id'];
+    $sql = "SELECT * FROM `tbl_prescription_regular` WHERE `id` = '$prescription_id'";
+    $res = mysqli_query($conn,$sql);
+    echo json_encode(mysqli_fetch_array($res));
+}
+
+if(isset($_POST['updatePrescription'])){
+    $prescription_id = $_POST['prescription_id'];
+    $prescription = $_POST['prescription'];
+    $sql = "UPDATE `tbl_prescription_regular` SET `prescription`= '$prescription' WHERE `id` = '$prescription_id'";
+    $res = mysqli_query($conn,$sql);
+    if($res){
+        echo "ok";
+    }else{
+        echo var_dump($res);
+    }
+}
+
+if (isset($_POST['deleteReport'])) {
+    $report_id = $_POST['report_id'];
+    $report_name = $_POST['report_name'];
+    unlink('../images/'.$report_name);
+    $sql = "DELETE FROM `tbl_report_regular` WHERE `id` = '$report_id'";
+    $res = mysqli_query($conn,$sql);
+}
+
+
+if (isset($_POST['addReports'])) {
+    $appointment_id = $_POST['appointment_id'];
+    $dir = "../images/";
+    $img_name = $date.$_FILES['reports']['name'];
+    if (file_exists($dir.$img_name)) {
+        echo "Report already exists!";
+    }else{
+        move_uploaded_file($_FILES['reports']['tmp_name'],$dir.$img_name);
+        $sql = "INSERT INTO `tbl_report_regular`(`appointment_id`, `image`) VALUES ('$appointment_id','$img_name')";
+        $res = mysqli_query($conn,$sql);
+    }
+}
+
+if (isset($_POST['reports'])) {
+    $appointment_id = $_POST['appointment_id'];
+    $sql = "SELECT * FROM `tbl_report_regular` WHERE `appointment_id` = '$appointment_id' ORDER BY id DESC";
+    $res = mysqli_query($conn,$sql);
+    while ($reports = mysqli_fetch_assoc($res)) {
+        ?>
+            <a class="" target="blank" href="images/<?php echo $reports['image']; ?>">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top"src="images/<?php echo $reports['image']; ?>" alt="unavailable report">
+                <div class="card-body">
+                    <a onclick="deleteReport(<?php echo $reports['id']; ?>,'<?php echo $reports['image']; ?>')" href="javascript:void(0)" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+            </a>
+        <?php
+    }
+    if(mysqli_num_rows($res)==0){
+        ?>
+        <h3 class="d-flex justify-content-center align-items-center">Report not available</h3>
+        <?php
+    }
+}
+
 if(isset($_POST['editNote'])){
     $id = $_POST['id'];
     $sql = "SELECT * FROM `tbl_appoint` WHERE `id` = '$id'";
@@ -32,6 +108,8 @@ if (isset($_POST['showExceptTodayAppointments'])) {
                     <th>Name</th>
                     <th>Date</th>
                     <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -47,6 +125,20 @@ if (isset($_POST['showExceptTodayAppointments'])) {
                     <td><?php echo $patient['name'] ?></td>
                     <td><?php echo $fetch['date'] ?></td>
                     <td><button class="btn btn-sm btn-primary" onclick="patientDetail(<?php echo $fetch['patient_id'] ?>)">View profile</button></td>
+                    <td><button class="btn btn-sm btn-primary" onclick="reports(<?php echo $fetch['id'] ?>)">Reports</button></td>
+                    <td>
+                        <?php
+                        $appoint_id = $fetch['id'];
+                        $sql_prescription = "SELECT * FROM `tbl_prescription_regular` WHERE `appointment_id` = '$appoint_id'";
+                        $res_prescription = mysqli_query($conn,$sql_prescription);
+                        if(mysqli_num_rows($res_prescription)>0){
+                            $prescription = mysqli_fetch_assoc($res_prescription);
+                            ?><button class="btn btn-sm btn-primary" onclick="UpdatePrescription(<?php echo $prescription['id'] ?>)">Update Prescription</button><?php
+                        }else{
+                            ?><button class="btn btn-sm btn-primary" onclick="prescription(<?php echo $appoint_id ?>)">Add Prescription</button><?php
+                        }
+                        ?>
+                    </td>
                 </tr>
                 <?php
             }
